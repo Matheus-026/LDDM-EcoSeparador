@@ -1,0 +1,1 @@
+enum TipoLixo { papel, plastico, vidro, metal }
