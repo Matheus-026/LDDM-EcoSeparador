@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/inicio_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/pontuacao_service.dart';
 import 'theme/cores.dart';
 
@@ -23,7 +23,7 @@ class EcoApp extends StatelessWidget {
       title: 'EcoSeparador',
       debugShowCheckedModeBanner: false,
       theme: Tema.tema,
-      home: const InicioScreen(),
+      home: const SplashScreen(),
     );
   }
 }
