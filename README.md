@@ -12,6 +12,16 @@ Projeto do Workshop Técnico (Tema 4: Gamificação e engajamento com Flame) de 
 </p>
 -->
 
+## Equipe
+
+| Integrante | Frente |
+|---|---|
+| `<nome>` | Jogo em Flame |
+| `<nome>` | Regras e dados |
+| `<nome>` | Telas Flutter |
+| `<nome>` | Lixeiras e feedback visual |
+| `<nome>` | Repositório, README e apresentação |
+
 ## O que demonstra
 
 - **Engajamento:** pontos, combo, vidas, níveis, conquistas e recorde.
@@ -81,14 +91,5 @@ As regras ficam em `PontuacaoService`. O jogo só avisa acertos e erros, e a int
 - O arrasto usa `DragCallbacks`. `TapDetector` e `PanDetector` são a forma antiga, depreciada.
 - Quando não usar: formulários, listas e telas de texto ficam melhores em widgets.
 
-## Equipe
-
-| Integrante | Frente |
-|---|---|
-| `<nome>` | Jogo em Flame |
-| `<nome>` | Regras e dados |
-| `<nome>` | Telas Flutter |
-| `<nome>` | Lixeiras e feedback visual |
-| `<nome>` | Repositório, README e apresentação |
 
 Slides: `<link>` · Protótipo das telas: `docs/prototipo/`
