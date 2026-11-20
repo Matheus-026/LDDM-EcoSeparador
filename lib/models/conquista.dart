@@ -10,4 +10,13 @@ class Conquista {
   final String titulo;
   final String descricao;
   final bool desbloqueada;
+
+  Conquista copyWith({bool? desbloqueada}) {
+    return Conquista(
+      id: id,
+      titulo: titulo,
+      descricao: descricao,
+      desbloqueada: desbloqueada ?? this.desbloqueada,
+    );
+  }
 }
