@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
 import '../models/tipo_lixo.dart';
@@ -19,10 +20,13 @@ extension TipoLixoEmoji on TipoLixo {
 ///
 /// A posição é o CENTRO do item (anchor center). Quem decide o que acontece
 /// quando ele chega ao chão ou é solto é o EcoGame.
-class ItemLixo extends PositionComponent {
+///
+/// Enquanto o jogador arrasta, o item para de cair (DragCallbacks).
+class ItemLixo extends PositionComponent with DragCallbacks {
   ItemLixo({
     required this.tipo,
     required Vector2 position,
+    required this.aoSoltar,
     this.velocidade = 80,
   }) : super(
           position: position,
@@ -34,6 +38,9 @@ class ItemLixo extends PositionComponent {
 
   final TipoLixo tipo;
 
+  /// Chamado quando o jogador solta o item (ou o toque é cancelado).
+  final void Function(ItemLixo item) aoSoltar;
+
   /// Velocidade de queda em px/s. O EcoGame atualiza conforme o nível.
   double velocidade;
 
@@ -43,7 +50,33 @@ class ItemLixo extends PositionComponent {
   @override
   void update(double dt) {
     super.update(dt);
+    if (isDragged) return; // preso ao dedo, não cai
     position.y += velocidade * dt;
+  }
+
+  @override
+  void onDragStart(DragStartEvent event) {
+    super.onDragStart(event);
+    priority = 10; // fica por cima dos outros itens enquanto arrasta
+  }
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) {
+    position += event.localDelta;
+
+    // Mantém o item dentro da arena.
+    final arena = findGame()?.size;
+    if (arena == null) return;
+    const raio = diametro / 2;
+    position.x = position.x.clamp(raio, arena.x - raio).toDouble();
+    position.y = position.y.clamp(raio, arena.y - raio).toDouble();
+  }
+
+  @override
+  void onDragEnd(DragEndEvent event) {
+    super.onDragEnd(event);
+    priority = 0;
+    aoSoltar(this);
   }
 
   @override

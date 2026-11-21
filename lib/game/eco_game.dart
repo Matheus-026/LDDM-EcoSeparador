@@ -90,6 +90,7 @@ class EcoGame extends FlameGame {
       ItemLixo(
         tipo: tipo,
         position: Vector2(x, -raio), // nasce logo acima da arena
+        aoSoltar: _aoSoltar,
         velocidade: velocidadeDeQueda(service.nivel),
       ),
     );
@@ -102,6 +103,7 @@ class EcoGame extends FlameGame {
     for (final item in children.whereType<ItemLixo>().toList()) {
       if (item.isRemoving) continue;
       item.velocidade = velocidade;
+      if (item.isDragged) continue; // o jogador está segurando
 
       if (item.position.y + ItemLixo.diametro / 2 >= _chaoY) {
         item.removeFromParent();
@@ -109,6 +111,10 @@ class EcoGame extends FlameGame {
       }
     }
   }
+
+  /// Por enquanto soltar não faz nada: o item volta a cair.
+  /// O próximo passo decide acerto/erro pela lixeira embaixo dele.
+  void _aoSoltar(ItemLixo item) {}
 
   void _limparItens() {
     removeAll(children.whereType<ItemLixo>().toList());
