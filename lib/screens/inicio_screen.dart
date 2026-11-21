@@ -7,9 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../models/tipo_lixo.dart';
 import '../theme/cores.dart';
-import '../widgets/barra_progresso.dart';
 import '../widgets/botao_tatil.dart';
 import '../widgets/cartao_papel.dart';
+import '../widgets/rodape_conquista.dart';
 import '../services/pontuacao_service.dart';
 import '../utils/formato.dart';
 
@@ -38,7 +38,7 @@ class InicioScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
-              const _RodapeConquista(),
+              const RodapeConquista(),
             ],
           ),
         ),
@@ -231,57 +231,4 @@ class _SorrisoPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _RodapeConquista extends StatelessWidget {
-  const _RodapeConquista();
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: CartaoPapel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Mestre do Vidro', style: Tema.titulo(tamanho: 14)),
-                      Text('42/50', style: Tema.titulo(tamanho: 14)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const BarraProgresso(valor: 0.84),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Faltam 8 vidros para o troféu',
-                    style: Tema.texto(tamanho: 12),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 84,
-            child: CartaoPapel(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('🏅', style: TextStyle(fontSize: 26)),
-                  Text('Troféus', style: Tema.titulo(tamanho: 12)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
