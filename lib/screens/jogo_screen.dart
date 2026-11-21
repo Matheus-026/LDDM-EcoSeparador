@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../game/eco_game.dart';
 import '../services/pontuacao_service.dart';
 import '../theme/cores.dart';
-import '../widgets/botao_tatil.dart';
 import '../widgets/hud.dart';
 import 'fim_screen.dart';
 
@@ -73,44 +72,11 @@ class _Arena extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s = context.read<PontuacaoService>();
     return Container(
       margin: const EdgeInsets.all(16),
       clipBehavior: Clip.antiAlias,
       decoration: Tema.decoracao(cor: Cores.papel, sombra: 0),
-      child: Stack(
-        children: [
-          Positioned.fill(child: GameWidget(game: jogo)),
-          // PROVISÓRIO: somem quando o Flame chamar o service.
-          Positioned(
-            left: 12,
-            right: 12,
-            bottom: 12,
-            child: Row(
-              children: [
-                Expanded(
-                  child: BotaoTatil(
-                    texto: 'ACERTO',
-                    altura: 54,
-                    tamanhoFonte: 16,
-                    aoPressionar: s.registrarAcerto,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: BotaoTatil(
-                    texto: 'ERRO',
-                    cor: Cores.lixeiraPlastico,
-                    altura: 54,
-                    tamanhoFonte: 16,
-                    aoPressionar: s.registrarErro,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      child: GameWidget(game: jogo),
     );
   }
 }
