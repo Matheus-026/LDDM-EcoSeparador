@@ -16,11 +16,11 @@ Projeto do Workshop Técnico (Tema 4: Gamificação e engajamento com Flame) de 
 
 | Integrante | Frente |
 |---|---|
-| `<nome>` | Jogo em Flame |
-| `<nome>` | Regras e dados |
-| `<nome>` | Telas Flutter |
-| `<nome>` | Lixeiras e feedback visual |
-| `<nome>` | Repositório, README e apresentação |
+| `Luiz Felipe Volpe Pinheiro Brandão` | Jogo em Flame |
+| `Igor Patrick Freitas da Silva` | Regras e dados |
+| `Matheus Mendes Ramos` | Telas Flutter |
+| `Gil Passos Coelho Neto` | Lixeiras e feedback visual |
+| `Enzo Moraes Martini` | Repositório, README e apresentação |
 
 ## O que demonstra
 
@@ -92,4 +92,5 @@ As regras ficam em `PontuacaoService`. O jogo só avisa acertos e erros, e a int
 - Quando não usar: formulários, listas e telas de texto ficam melhores em widgets.
 
 
-Slides: `<link>` · Protótipo das telas: `docs/prototipo/`
+Slides: `https://docs.google.com/presentation/d/1Sm_wXMfNnIZboKwKLFD8ndOG-NNoZhcE/edit?usp=sharing&ouid=104059653283702022016&rtpof=true&sd=true` 
+Protótipo das telas: `docs/prototipo/`
