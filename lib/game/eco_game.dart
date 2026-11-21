@@ -147,28 +147,49 @@ class EcoGame extends FlameGame {
     }
   }
 
-  /// Soltou sobre uma lixeira: compara o tipo e pontua. Soltou fora: o item
-  /// simplesmente volta a cair (e conta como perdido se chegar ao chão).
-  void _aoSoltar(ItemLixo item) {
-    if (_encerrado) return;
+  /// Lixeira mais próxima (na horizontal) do ponto [x].
+  Lixeira _lixeiraMaisProxima(double x) {
+    var escolhida = _lixeiras.first;
+    var menor = double.infinity;
     for (final lixeira in _lixeiras) {
-      if (!lixeira.containsPoint(item.absoluteCenter)) continue;
+      final distancia = (x - (lixeira.position.x + lixeira.size.x / 2)).abs();
+      if (distancia < menor) {
+        menor = distancia;
+        escolhida = lixeira;
+      }
+    }
+    return escolhida;
+  }
 
-      // Feedback antes do service: se esta jogada acabar o jogo, o listener
-      // pausa o motor e a animação não chegaria a rodar.
-      final acertou = lixeira.aceita(item.tipo);
-      if (acertou) {
-        lixeira.feedbackAcerto();
-      } else {
-        lixeira.feedbackErro();
-      }
-      item.removeFromParent();
-      if (acertou) {
-        service.registrarAcerto();
-      } else {
-        service.registrarErro();
-      }
-      return;
+  /// Soltou na faixa das lixeiras: vale a lixeira mais próxima na horizontal,
+  /// e o tipo decide acerto ou erro. Soltou acima da faixa: o item volta a
+  /// cair (e conta como perdido se chegar ao chão).
+  ///
+  /// A faixa começa no MESMO ponto onde o item é considerado perdido
+  /// ([_chaoY]) e usa a borda de baixo do item. Assim nunca existe uma zona
+  /// em que o item encosta na lixeira mas é contado como perdido.
+  void _aoSoltar(ItemLixo item) {
+    if (_encerrado || _lixeiras.isEmpty) return;
+
+    final centro = item.absoluteCenter;
+    final base = centro.y + ItemLixo.diametro / 2;
+    if (base < _chaoY) return; // ainda no ar: continua caindo
+
+    final lixeira = _lixeiraMaisProxima(centro.x);
+
+    // Feedback antes do service: se esta jogada acabar o jogo, o listener
+    // pausa o motor e a animação não chegaria a rodar.
+    final acertou = lixeira.aceita(item.tipo);
+    if (acertou) {
+      lixeira.feedbackAcerto();
+    } else {
+      lixeira.feedbackErro();
+    }
+    item.removeFromParent();
+    if (acertou) {
+      service.registrarAcerto();
+    } else {
+      service.registrarErro();
     }
   }
 

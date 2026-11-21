@@ -4,24 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../models/tipo_lixo.dart';
 import '../theme/cores.dart';
+import 'desenho_item.dart';
 
-/// Emoji de cada tipo de lixo (aparência provisória, a frente D pode trocar
-/// por sprites depois).
-extension TipoLixoEmoji on TipoLixo {
-  String get emoji => switch (this) {
-        TipoLixo.papel => '📰',
-        TipoLixo.plastico => '🍾',
-        TipoLixo.vidro => '🫙',
-        TipoLixo.metal => '🥫',
-      };
-}
-
-/// Item de lixo que cai pela arena.
-///
-/// A posição é o CENTRO do item (anchor center). Quem decide o que acontece
-/// quando ele chega ao chão ou é solto é o EcoGame.
-///
-/// Enquanto o jogador arrasta, o item para de cair (DragCallbacks).
 class ItemLixo extends PositionComponent with DragCallbacks {
   ItemLixo({
     required this.tipo,
@@ -43,9 +27,6 @@ class ItemLixo extends PositionComponent with DragCallbacks {
 
   /// Velocidade de queda em px/s. O EcoGame atualiza conforme o nível.
   double velocidade;
-
-  static final TextPaint _emoji =
-      TextPaint(style: const TextStyle(fontSize: 32));
 
   @override
   void update(double dt) {
@@ -100,11 +81,7 @@ class ItemLixo extends PositionComponent with DragCallbacks {
         ..strokeWidth = Tema.borda,
     );
 
-    _emoji.render(
-      canvas,
-      tipo.emoji,
-      Vector2(size.x / 2, size.y / 2),
-      anchor: Anchor.center,
-    );
+    // Figura do item desenhada com formas (sem emoji, sem depender de fonte).
+    desenharItem(canvas, tipo, centro, raio);
   }
 }
