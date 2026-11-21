@@ -7,6 +7,7 @@ import '../models/tipo_lixo.dart';
 import '../services/pontuacao_service.dart';
 import '../theme/cores.dart';
 import 'item_lixo.dart';
+import 'lixeira.dart';
 
 /// Jogo da coleta seletiva: sorteia itens que caem e (nos próximos passos)
 /// deixa o jogador arrastá-los até a lixeira certa.
@@ -22,6 +23,8 @@ class EcoGame extends FlameGame {
   static const double alturaFaixaLixeiras = 112;
 
   static const double _tempoAteOPrimeiroItem = 0.8;
+
+  final List<Lixeira> _lixeiras = [];
 
   double _tempoParaProximo = _tempoAteOPrimeiroItem;
   bool _encerrado = false;
@@ -40,7 +43,39 @@ class EcoGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
+    for (final tipo in TipoLixo.values) {
+      final lixeira = Lixeira(
+        tipo: tipo,
+        position: Vector2.zero(),
+        size: Vector2.zero(),
+      );
+      _lixeiras.add(lixeira);
+      add(lixeira);
+    }
+    _posicionarLixeiras();
     service.addListener(_aoMudarService);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    _posicionarLixeiras(); // não faz nada antes do onLoad criar as lixeiras
+  }
+
+  /// Alinha as 4 lixeiras na base, dividindo a largura igualmente.
+  void _posicionarLixeiras() {
+    if (_lixeiras.isEmpty) return;
+    const margem = 12.0;
+    const espaco = 8.0;
+    final n = _lixeiras.length;
+    final largura = (size.x - 2 * margem - (n - 1) * espaco) / n;
+    final altura = alturaFaixaLixeiras - 2 * margem;
+    final topo = size.y - margem - altura;
+    for (var i = 0; i < n; i++) {
+      final lixeira = _lixeiras[i];
+      lixeira.size = Vector2(largura, altura);
+      lixeira.position = Vector2(margem + i * (largura + espaco), topo);
+    }
   }
 
   @override
@@ -112,9 +147,30 @@ class EcoGame extends FlameGame {
     }
   }
 
-  /// Por enquanto soltar não faz nada: o item volta a cair.
-  /// O próximo passo decide acerto/erro pela lixeira embaixo dele.
-  void _aoSoltar(ItemLixo item) {}
+  /// Soltou sobre uma lixeira: compara o tipo e pontua. Soltou fora: o item
+  /// simplesmente volta a cair (e conta como perdido se chegar ao chão).
+  void _aoSoltar(ItemLixo item) {
+    if (_encerrado) return;
+    for (final lixeira in _lixeiras) {
+      if (!lixeira.containsPoint(item.absoluteCenter)) continue;
+
+      // Feedback antes do service: se esta jogada acabar o jogo, o listener
+      // pausa o motor e a animação não chegaria a rodar.
+      final acertou = lixeira.aceita(item.tipo);
+      if (acertou) {
+        lixeira.feedbackAcerto();
+      } else {
+        lixeira.feedbackErro();
+      }
+      item.removeFromParent();
+      if (acertou) {
+        service.registrarAcerto();
+      } else {
+        service.registrarErro();
+      }
+      return;
+    }
+  }
 
   void _limparItens() {
     removeAll(children.whereType<ItemLixo>().toList());
